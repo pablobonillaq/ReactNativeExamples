@@ -1,0 +1,266 @@
+<!doctype html>
+<!--
+  Source of the app icon: "RNE" in graffiti style on a brick wall.
+  Rendered to PNG by scripts/generate-icons.ps1 (headless Microsoft Edge).
+
+  ?layer=full  complete icon (legacy square/round icons, iOS)
+  ?layer=bg    only the wall      (adaptive icon background)
+  ?layer=fg    only the letters, smaller to fit the adaptive safe zone
+  ?layer=mono  white silhouette of the letters (Android 13+ themed icon)
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=block"
+      rel="stylesheet"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 1024px;
+        height: 1024px;
+        overflow: hidden;
+        background: transparent;
+      }
+      svg {
+        display: block;
+      }
+      .letters text {
+        font-family: 'Luckiest Guy', Impact, sans-serif;
+        font-size: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      id="icon"
+      xmlns="http://www.w3.org/2000/svg"
+      width="1024"
+      height="1024"
+      viewBox="0 0 1024 1024"
+    >
+      <defs>
+        <!-- Letter fill: hot pink -> orange -> yellow -->
+        <linearGradient id="paint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ff2fa0" />
+          <stop offset="0.55" stop-color="#ff8a00" />
+          <stop offset="1" stop-color="#ffe500" />
+        </linearGradient>
+        <!-- Wall -->
+        <radialGradient id="wallLight" cx="0.5" cy="0.45" r="0.75">
+          <stop offset="0" stop-color="#3a3357" />
+          <stop offset="1" stop-color="#110e1c" />
+        </radialGradient>
+        <pattern
+          id="bricks"
+          width="160"
+          height="80"
+          patternUnits="userSpaceOnUse"
+        >
+          <rect width="160" height="80" fill="none" />
+          <path
+            d="M0 0H160M0 40H160M80 0V40M0 40V80M160 40V80"
+            stroke="#000"
+            stroke-opacity="0.45"
+            stroke-width="6"
+          />
+        </pattern>
+        <filter id="grain" x="0" y="0" width="100%" height="100%">
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.9"
+            numOctaves="2"
+            seed="7"
+          />
+          <feColorMatrix
+            values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.10 0"
+          />
+          <feComposite in2="SourceGraphic" operator="in" />
+        </filter>
+        <filter id="spray" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="38" />
+        </filter>
+        <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="10" />
+        </filter>
+      </defs>
+
+      <!-- ===== Background: brick wall with spray mist ===== -->
+      <g id="bg">
+        <rect width="1024" height="1024" fill="url(#wallLight)" />
+        <rect width="1024" height="1024" fill="url(#bricks)" />
+        <rect width="1024" height="1024" fill="#fff" filter="url(#grain)" />
+        <circle cx="300" cy="420" r="230" fill="#ff2fa0" opacity="0.35" filter="url(#spray)" />
+        <circle cx="760" cy="600" r="240" fill="#00d5ff" opacity="0.30" filter="url(#spray)" />
+        <circle cx="520" cy="760" r="180" fill="#ffe500" opacity="0.18" filter="url(#spray)" />
+        <g id="splatter"></g>
+      </g>
+
+      <!-- ===== Foreground: graffiti letters ===== -->
+      <g id="fg">
+        <g id="lettersTransform">
+          <g id="drips"></g>
+          <g class="letters" id="letters"></g>
+          <g id="sparkles"></g>
+        </g>
+      </g>
+    </svg>
+
+    <script>
+      const NS = 'http://www.w3.org/2000/svg';
+      const layer = new URLSearchParams(location.search).get('layer') || 'full';
+      const $ = id => document.getElementById(id);
+      const el = (tag, attrs, parent) => {
+        const node = document.createElementNS(NS, tag);
+        for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+        parent.appendChild(node);
+        return node;
+      };
+
+      // Deterministic random so every render is identical.
+      let seed = 42;
+      const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+
+      // Paint splatter dots on the wall.
+      const splatterColors = ['#ff2fa0', '#00d5ff', '#ffe500', '#7cff4f'];
+      for (let i = 0; i < 70; i++) {
+        el('circle', {
+          cx: rand() * 1024,
+          cy: rand() * 1024,
+          r: 2 + rand() * 9,
+          fill: splatterColors[i % splatterColors.length],
+          opacity: 0.25 + rand() * 0.45,
+        }, $('splatter'));
+      }
+
+      // Each letter is placed and tilted by hand for a bouncy graffiti look.
+      const LETTERS = [
+        { ch: 'R', x: 112, y: 660, rot: -10 },
+        { ch: 'N', x: 380, y: 625, rot: 5 },
+        { ch: 'E', x: 650, y: 672, rot: -6 },
+      ];
+      const lettersGroup = $('letters');
+      const mono = layer === 'mono';
+
+      LETTERS.forEach(({ ch, x, y, rot }, i) => {
+        const g = el('g', {
+          transform: `rotate(${rot} ${x + 120} ${y - 140})`,
+        }, lettersGroup);
+        const text = (attrs, parent = g) => {
+          const t = el('text', { x, y, ...attrs }, parent);
+          t.textContent = ch;
+          return t;
+        };
+
+        if (mono) {
+          // Silhouette only: outline + fill in one solid color.
+          text({
+            fill: '#fff',
+            stroke: '#fff',
+            'stroke-width': 34,
+            'stroke-linejoin': 'round',
+          });
+          return;
+        }
+
+        // Soft shadow on the wall.
+        text({
+          fill: '#000',
+          opacity: 0.55,
+          transform: 'translate(26 30)',
+          filter: 'url(#softShadow)',
+          stroke: '#000',
+          'stroke-width': 34,
+          'stroke-linejoin': 'round',
+        });
+        // 3D extrusion: stacked dark copies going down-right.
+        for (let d = 22; d >= 2; d -= 2) {
+          text({
+            fill: '#2a0a4a',
+            stroke: '#0b0612',
+            'stroke-width': 34,
+            'stroke-linejoin': 'round',
+            transform: `translate(${d} ${d})`,
+          });
+        }
+        // Thick black outline + gradient fill.
+        text({
+          fill: 'url(#paint)',
+          stroke: '#0b0612',
+          'stroke-width': 30,
+          'stroke-linejoin': 'round',
+          'paint-order': 'stroke',
+        });
+        // White inner line, typical of graffiti pieces.
+        text({
+          fill: 'none',
+          stroke: '#ffffff',
+          'stroke-width': 5,
+          'stroke-linejoin': 'round',
+          opacity: 0.9,
+        });
+        // Glossy highlight clipped to the letter.
+        const clipId = `clip${i}`;
+        const clip = el('clipPath', { id: clipId }, g);
+        text({}, clip);
+        // The clip goes on a wrapper group (not on the rotated ellipse) so
+        // it stays aligned with the letter.
+        const shine = el('g', { 'clip-path': `url(#${clipId})` }, g);
+        el('ellipse', {
+          cx: x + 90,
+          cy: y - 250,
+          rx: 120,
+          ry: 46,
+          fill: '#fff',
+          opacity: 0.35,
+          transform: `rotate(-20 ${x + 90} ${y - 250})`,
+        }, shine);
+      });
+
+      // Paint drips hanging from the letters.
+      const DRIPS = [
+        { x: 182, y: 640, len: 120 },
+        { x: 300, y: 650, len: 70 },
+        { x: 470, y: 640, len: 150 },
+        { x: 705, y: 662, len: 95 },
+        { x: 860, y: 640, len: 130 },
+      ];
+      DRIPS.forEach(({ x, y, len }) => {
+        const w = 22;
+        const d = `M${x - w / 2} ${y} V${y + len} a${w / 2} ${w / 2} 0 0 0 ${w} 0 V${y} Z`;
+        if (mono) {
+          el('path', { d, fill: '#fff', stroke: '#fff', 'stroke-width': 14 }, $('drips'));
+          return;
+        }
+        el('path', { d, fill: '#ffe500', stroke: '#0b0612', 'stroke-width': 10 }, $('drips'));
+        el('circle', { cx: x - 3, cy: y + len - 4, r: 4, fill: '#fff', opacity: 0.8 }, $('drips'));
+      });
+
+      // Sparkles.
+      if (!mono) {
+        const star = (cx, cy, s) =>
+          el('path', {
+            d: `M${cx} ${cy - s} Q${cx} ${cy} ${cx + s} ${cy} Q${cx} ${cy} ${cx} ${cy + s} Q${cx} ${cy} ${cx - s} ${cy} Q${cx} ${cy} ${cx} ${cy - s} Z`,
+            fill: '#fff',
+          }, $('sparkles'));
+        star(150, 270, 42);
+        star(880, 300, 30);
+        star(830, 770, 24);
+      }
+
+      // Layers.
+      if (layer === 'bg') $('fg').remove();
+      if (layer === 'fg' || layer === 'mono') {
+        $('bg').remove();
+        // Adaptive icons only guarantee a 66/108 circle: shrink the letters.
+        $('lettersTransform').setAttribute(
+          'transform',
+          'translate(512 512) scale(0.64) translate(-512 -512)',
+        );
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "90978878189",
+    "project_id": "react-native-examples-af8f7",
+    "storage_bucket": "react-native-examples-af8f7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90978878189:android:17be39cf09959b4956c2e4",
+        "android_client_info": {
+          "package_name": "com.reactnativeexamples"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCA0edDic2EudrvzjVm_r68Y9NHfQ3w3OU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,106 @@
+/** English texts: vault. Keys are used with useTranslation('vault'). */
+const vault = {
+  storageError: 'Secure storage error',
+  header: {
+    lock: '🔒 Lock',
+    lockA11y: 'Lock vault',
+  },
+  reset: {
+    title: 'Reset vault?',
+    message: 'This deletes every saved password and the PIN / biometric setup.',
+    cancel: 'Cancel',
+    confirm: 'Delete everything',
+    button: 'Reset vault',
+    hint: 'Deletes all saved passwords and the lock setup',
+  },
+  footer: {
+    protectedWith: 'Protected with {{method}}',
+    pin: '6-digit PIN',
+  },
+  method: {
+    pin: 'PIN',
+  },
+  biometry: {
+    faceId: 'Face ID',
+    touchId: 'Touch ID',
+    fingerprint: 'Fingerprint',
+    face: 'Face unlock',
+    iris: 'Iris',
+    generic: 'Biometrics',
+  },
+  biometricPrompt: {
+    cancel: 'Cancel',
+  },
+  setup: {
+    biometricPrompt: 'Confirm {{method}} to protect your passwords',
+    notConfirmedTitle: '{{method}} not confirmed',
+    notConfirmedMessage: 'Try again or use a 6-digit PIN instead.',
+    biometricError: 'Could not set up biometrics',
+    choosePin: 'Choose a 6-digit PIN',
+    back: 'Back',
+    repeatPin: 'Repeat the PIN',
+    mismatch: 'PINs do not match. Try again.',
+    startOver: 'Start over',
+    title: 'Protect your passwords',
+    subtitle:
+      "Choose how you'll unlock this vault. You'll use it every time you open it or want to see a saved password.",
+    usePin: '🔢  Use a 6-digit PIN',
+    usePinHint: 'Creates a 6 digit PIN to unlock the vault',
+    useBiometrics: '{{icon}}  Use {{method}}',
+    useBiometricsHint: 'Uses the biometrics configured on this device',
+    noBiometrics:
+      'No biometrics available. Set up a screen lock and Face ID / a fingerprint in the device settings to use this option.',
+  },
+  unlock: {
+    biometricPrompt: 'Unlock your passwords',
+    title: 'Vault locked',
+    pinSubtitle: 'Enter your 6-digit PIN to continue.',
+    biometricSubtitle: 'Use {{method}} to continue.',
+    biometricButton: '🫆  Unlock with {{method}}',
+  },
+  pin: {
+    mismatch: 'PINs do not match',
+    wrong_one: 'Wrong PIN. {{count}} attempt left',
+    wrong_other: 'Wrong PIN. {{count}} attempts left',
+    hint_one: 'Enter {{count}} digit',
+    hint_other: 'Enter {{count}} digits',
+    tooManyAttempts: 'Too many wrong attempts.',
+    tryAgainIn: 'Try again in <countdown>{{time}}</countdown>',
+  },
+  content: {
+    revealPrompt: 'Show the password for {{info}}',
+    savedTitle: 'Saved passwords ({{number}})',
+    empty: 'Nothing saved yet.',
+    modalTitle: 'Show password for “{{info}}”',
+    enterPin: 'Enter your PIN',
+    cancel: 'Cancel',
+  },
+  form: {
+    title: 'New password',
+    info: 'Info',
+    infoPlaceholder: 'e.g. Gmail, Bank, Netflix',
+    user: 'User',
+    userPlaceholder: 'Username or email',
+    password: 'Password',
+    passwordPlaceholder: 'Password',
+    errors: {
+      info: 'Info is required',
+      user: 'User is required',
+      password: 'Password is required',
+    },
+    saving: 'Saving…',
+    save: 'Save',
+    saveHint: 'Saves this password in secure storage',
+    saved: 'Saved in secure storage',
+    saveError: 'Could not save',
+  },
+  entry: {
+    passwordA11y: 'Password {{password}}',
+    passwordHidden: 'Password hidden',
+    hide: 'Hide password',
+    show: 'Show password',
+    requires: 'Requires your {{method}}',
+  },
+};
+
+export default vault;
