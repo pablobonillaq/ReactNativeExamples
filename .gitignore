@@ -76,3 +76,37 @@ yarn-error.log
 
 # App icon: intermediate 1024px renders (regenerate with scripts/generate-icons.ps1)
 assets/icon/rendered/
+
+# Firebase: archivos de configuración con claves del proyecto (no subir a GitHub)
+android/app/google-services.json
+ios/**/GoogleService-Info.plist
+.firebase/
+firebase-debug.log
+
+# Sentry: tokens de autenticación
+sentry.properties
+.sentryclirc
+
+# Variables de entorno / secretos
+.env
+.env.*
+!.env.example
+
+# Android: keystores de firma de release y credenciales
+*.jks
+keystore.properties
+
+# iOS: build del codegen y Pods
+ios/build/
+ios/Pods/
+
+# Logs
+*.log
+
+# TypeScript
+*.tsbuildinfo
+
+# Editores y sistema operativo
+.vscode/
+Thumbs.db
+desktop.ini
